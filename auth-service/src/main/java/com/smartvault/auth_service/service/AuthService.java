@@ -27,6 +27,7 @@ public class AuthService {
 
         user.setPin(user.getPin(), passwordEncoder); // ✅ Hash PIN before saving
         //user.setActive(true);
+        user.updateActiveStatus();
 
         userRepository.save(user);
         return "User registered successfully!";
@@ -36,11 +37,14 @@ public class AuthService {
     public String authenticateUser(String debitCardNumber, String pin) {
         Optional<User> userOptional = userRepository.findByDebitCardNumber(debitCardNumber);
 
+
+
         if (userOptional.isEmpty()) {
             return "Invalid debit card number";
         }
 
         User user = userOptional.get();
+        user.updateActiveStatus();
 
         if (!user.getActive()) {
             return "User is inactive. Access denied.";

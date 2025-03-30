@@ -3,6 +3,8 @@ package com.smartvault.auth_service.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "users")
 @Data
@@ -16,7 +18,9 @@ public class User {
 
     private String debitCardNumber;
     private String pin;  // Hashed PIN will be stored
-    private Boolean active = true; // Default to active
+    private Boolean active = true;
+    @Column(name = "expiryDate")
+    private LocalDate expiryDate;
 
     public void setPin(String rawPin, org.springframework.security.crypto.password.PasswordEncoder passwordEncoder) {
         this.pin = passwordEncoder.encode(rawPin); // ✅ Hash PIN correctly
@@ -52,5 +56,19 @@ public class User {
 
     public void setActive(Boolean active) {
         this.active = active;
+    }
+
+    public LocalDate getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setExpiryDate(LocalDate expiryDate) {
+        this.expiryDate = expiryDate;
+    }
+
+    public void updateActiveStatus() {
+        if (expiryDate != null) {
+            this.active = expiryDate.isAfter(LocalDate.now()); // ✅ Set active dynamically
+        }
     }
 }
