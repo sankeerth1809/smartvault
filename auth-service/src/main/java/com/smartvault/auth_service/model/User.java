@@ -2,11 +2,12 @@ package com.smartvault.auth_service.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-//import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Entity
 @Table(name = "users")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
     @Id
@@ -14,17 +15,19 @@ public class User {
     private Long id;
 
     private String debitCardNumber;
+    private String pin;  // Hashed PIN will be stored
+    private Boolean active = true; // Default to active
 
-    private String pin;  // This will store the hashed PIN
-
-    private boolean active;  // Your existing field
-
-    public void setPin(String rawPin) {
-        this.pin = new BCryptPasswordEncoder().encode(rawPin); // Hash before storing
+    public void setPin(String rawPin, org.springframework.security.crypto.password.PasswordEncoder passwordEncoder) {
+        this.pin = passwordEncoder.encode(rawPin); // ✅ Hash PIN correctly
     }
 
-    public boolean checkPin(String enteredPin) {
-        return new BCryptPasswordEncoder().matches(enteredPin, this.pin); // Verify PIN
+    public boolean checkPin(String enteredPin, org.springframework.security.crypto.password.PasswordEncoder passwordEncoder) {
+        return passwordEncoder.matches(enteredPin, this.pin); // ✅ Verify PIN correctly
+    }
+
+    public String getPin() {
+        return pin;
     }
 
     public Long getId() {
@@ -43,15 +46,11 @@ public class User {
         this.debitCardNumber = debitCardNumber;
     }
 
-    public String getPin() {
-        return pin;
-    }
-
     public boolean getActive() {
         return active;
     }
 
-    public void setActive(boolean ac) {
-        active = ac;
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 }

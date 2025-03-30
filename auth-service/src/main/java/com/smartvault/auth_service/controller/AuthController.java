@@ -1,57 +1,35 @@
 package com.smartvault.auth_service.controller;
 
 import com.smartvault.auth_service.model.User;
-import com.smartvault.auth_service.repository.UserRepository;
 import com.smartvault.auth_service.service.AuthService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
-    @Autowired
-    private AuthService authService;
-    private final UserRepository userRepository;
-    //private final UserRepository userRepository;
+    private final AuthService authService;
     private final PasswordEncoder passwordEncoder;
 
-    public AuthController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
+    // ✅ Constructor-based Dependency Injection
+    public AuthController(AuthService authService, PasswordEncoder passwordEncoder) {
+        this.authService = authService;
         this.passwordEncoder = passwordEncoder;
     }
 
+    // ✅ Register User API
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody User user) {
-        if (userRepository.findByDebitCardNumber(user.getDebitCardNumber()).isPresent()) {
-            return ResponseEntity.badRequest().body("User already exists with this debit card number");
-        }
-
-        // Encrypt PIN before saving
-        user.setPin(passwordEncoder.encode(user.getPin()));
-
-
-        userRepository.save(user);
-        return ResponseEntity.ok("User registered successfully");
+        String response = authService.registerUser(user);
+        return ResponseEntity.ok(response);
     }
 
-//    @PostMapping("/login")
-//    public Map<String, String> login(@RequestParam String debitCardNumber, @RequestParam String pin) {
-//        String token = authService.authenticateUser(debitCardNumber, pin);
-//
-//        Map<String, String> response = new HashMap<>();
-//        response.put("token", token);
-//        return response;
-//    }
-
+    // ✅ Login User API
     @PostMapping("/login")
-    public String login(@RequestParam String debitCardNumber, @RequestParam String pin) {
-        return authService.authenticateUser(debitCardNumber, pin);
+    public ResponseEntity<String> login(@RequestParam String debitCardNumber, @RequestParam String pin) {
+        String response = authService.authenticateUser(debitCardNumber, pin);
+        return ResponseEntity.ok(response);
     }
 }
