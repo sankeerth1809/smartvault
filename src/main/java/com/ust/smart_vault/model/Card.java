@@ -13,7 +13,19 @@ public class Card {
     private String cardNumber;
     private String atmPin;
 
+
+    private String ownerName;
+
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Locker> lockers;
+    public String getOwnerName() {
+        return ownerName;
+    }
+
+    public void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
+    }
+
 
     public Long getId() {
         return id;

@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface LockerRepository extends JpaRepository<Locker,Long> {
-    List<Locker> findByOwnerName(Card ownerName);
+    List<Locker> findByOwner(Card owner);
     Locker findByLockerNumberAndLockerPassword(String lockerNumber, String lockerPassword);
     Locker findByLockerNumber(String lockerNumber);
 }

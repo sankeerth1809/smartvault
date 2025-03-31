@@ -22,24 +22,24 @@ public class LockerService {
     private PasswordEncoder passwordEncoder;
 
     public String createLocker(Locker locker, Card owner) {
-        locker.setOwnerName(owner); // Set the owner as the Card entity
+        locker.setOwner(owner); // Set the owner as the Card entity
         locker.setLockerPassword(passwordEncoder.encode(locker.getLockerPassword())); // Hash the password
         lockerRepository.save(locker); // Save the locker to the database
         return "Locker created successfully!";
     }
 
-    public List<Locker> getLockersByOwner(String ownerName) {
-        // Find the Card entity associated with the owner's username or card number
-        Locker owner = ownerName.findByCardNumber(ownerName);
-        if (owner == null) {
-            throw new RuntimeException("Owner not found");
-        }
-        // Retrieve lockers associated with this Card (owner)
-        return lockerRepository.findByOwnerName(owner.get);
-    }
+//    public List<Locker> getLockersByOwner(String ownerName) {
+//        // Find the Card entity associated with the owner's username or card number
+//        Locker owner = ownerName.findByOwnerName(ownerName);
+//        if (owner == null) {
+//            throw new RuntimeException("Owner not found");
+//        }
+//        // Retrieve lockers associated with this Card (owner)
+//        return lockerRepository.findByOwnerName(owner.get);
+//    }
 
 
-    public boolean accessLocker(String lockerNumber, String lockerPassword, String username) {
+    public boolean accessLocker(String lockerNumber, String lockerPassword) {
         Locker locker = lockerRepository.findByLockerNumber(lockerNumber);
         return locker != null && passwordEncoder.matches(lockerPassword, locker.getLockerPassword()); // Password matched, access granted
 // Invalid password or locker does not exist

@@ -22,9 +22,11 @@ public class LockerController {
 
     @PostMapping("/create")
     public ResponseEntity<String> createLocker(@RequestBody Locker locker, Authentication authentication) {
-        String username = authentication.getName(); // Get logged-in user's identifier (e.g., card number or username)
+        String cardNumber = authentication.getName(); // Get logged-in user's identifier (e.g., card number or username)
+        System.out.println(cardNumber);
         // Fetch the Card entity based on the username (or card number)
-        Card owner = cardRepository.findByCardNumber(username); // Ensure this method exists in CardRepository
+        Card owner = cardRepository.findByCardNumber(cardNumber); // Ensure this method exists in CardRepository
+        System.out.println("Authenticated User: " + cardNumber);
         if (owner == null) {
             return ResponseEntity.status(404).body("Owner not found!");
         }
@@ -35,18 +37,18 @@ public class LockerController {
 
 
     // List lockers for the logged-in user
-    @GetMapping("/list")
-    public ResponseEntity<List<Locker>> listLockers(Authentication authentication) {
-        String username = authentication.getName(); // Get logged-in user's identifier
-        List<Locker> lockers = lockerService.getLockersByOwner(username);
-        return ResponseEntity.ok(lockers);
-    }
+//    @GetMapping("/list")
+//    public ResponseEntity<List<Locker>> listLockers(Authentication authentication) {
+//        String username = authentication.getName(); // Get logged-in user's identifier
+//        List<Locker> lockers = lockerService.getLockersByOwner(username);
+//        return ResponseEntity.ok(lockers);
+//    }
 
     // Access a locker (validate locker credentials)
-    @PostMapping("/access")
+    @GetMapping("/access")
     public ResponseEntity<String> accessLocker(@RequestParam String lockerNumber, @RequestParam String lockerPassword, Authentication authentication) {
         String username = authentication.getName(); // Verify user context
-        if(lockerService.accessLocker(lockerNumber, lockerPassword, username)) {
+        if(lockerService.accessLocker(lockerNumber, lockerPassword)) {
             return ResponseEntity.ok("Locker access granted!");
         } else {
             return ResponseEntity.status(401).body("Access denied! Invalid locker credentials.");

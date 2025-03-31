@@ -11,8 +11,9 @@ public class Locker {
     private String lockerNumber;
     private String lockerPassword;
 
-
-    private Card ownerName;
+    @ManyToOne
+    @JoinColumn(name = "card_id", nullable = false)
+    private Card owner;
 
     public long getId() {
         return id;
@@ -38,12 +39,11 @@ public class Locker {
         this.lockerPassword = lockerPassword;
     }
 
-    public Card getOwnerName() {
-        return ownerName;
+    public Card getOwner() {
+        return owner;
     }
 
-    public void setOwnerName(Card ownerName) {
-        this.ownerName = ownerName;
+    public void setOwner(Card owner) {
+        this.owner = owner;
     }
-
 }
