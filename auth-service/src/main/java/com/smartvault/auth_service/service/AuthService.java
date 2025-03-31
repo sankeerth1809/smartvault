@@ -1,5 +1,6 @@
 package com.smartvault.auth_service.service;
 
+import com.smartvault.auth_service.config.JwtUtil;
 import com.smartvault.auth_service.model.User;
 import com.smartvault.auth_service.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,10 +14,12 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    // ✅ Constructor-based Dependency Injection
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    private final JwtUtil jwtUtil;
+
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
     }
 
     // ✅ Register User (Hashing PIN before saving)
@@ -36,9 +39,6 @@ public class AuthService {
     // ✅ Authenticate User
     public String authenticateUser(String debitCardNumber, String pin) {
         Optional<User> userOptional = userRepository.findByDebitCardNumber(debitCardNumber);
-
-
-
         if (userOptional.isEmpty()) {
             return "Invalid debit card number";
         }
@@ -54,6 +54,6 @@ public class AuthService {
             return "Incorrect PIN";
         }
 
-        return "Login successful!";
+        return jwtUtil.generateToken(debitCardNumber);
     }
 }
