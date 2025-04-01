@@ -2,14 +2,17 @@ package com.ust.smart_vault.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 public class Locker {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
     private String lockerNumber;
     private String lockerPassword;
+    @ElementCollection
+    private List<String> contents;
 
     @ManyToOne
     @JoinColumn(name = "card_id", nullable = false)

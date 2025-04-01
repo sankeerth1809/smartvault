@@ -9,15 +9,41 @@ public class Card {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String cardNumber;
     private String atmPin;
-
-
     private String ownerName;
+    private String email;
+    private String phone;
+
+    public typeOfAccount getTypeOfAccount() {
+        return typeOfAccount;
+    }
+
+    public void setTypeOfAccount(typeOfAccount typeOfAccount) {
+        this.typeOfAccount = typeOfAccount;
+    }
+
+    @Enumerated(EnumType.STRING)
+    private typeOfAccount typeOfAccount;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Locker> lockers;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
     public String getOwnerName() {
         return ownerName;
     }

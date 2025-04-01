@@ -28,15 +28,17 @@ public class LockerService {
         return "Locker created successfully!";
     }
 
-//    public List<Locker> getLockersByOwner(String ownerName) {
-//        // Find the Card entity associated with the owner's username or card number
-//        Locker owner = ownerName.findByOwnerName(ownerName);
-//        if (owner == null) {
-//            throw new RuntimeException("Owner not found");
-//        }
-//        // Retrieve lockers associated with this Card (owner)
-//        return lockerRepository.findByOwnerName(owner.get);
-//    }
+    public List<Locker> getLockersByCardId(Long cardId) {
+        // Find the Card entity by its id
+        Card card = cardRepository.findById(cardId)
+                .orElseThrow(() -> new RuntimeException("Card not found with id: " + cardId));
+
+        // Retrieve lockers associated with this Card entity
+        return lockerRepository.findByOwner(card);
+    }
+
+
+
 
 
     public boolean accessLocker(String lockerNumber, String lockerPassword) {

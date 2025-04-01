@@ -36,13 +36,14 @@ public class LockerController {
     }
 
 
-    // List lockers for the logged-in user
-//    @GetMapping("/list")
-//    public ResponseEntity<List<Locker>> listLockers(Authentication authentication) {
-//        String username = authentication.getName(); // Get logged-in user's identifier
-//        List<Locker> lockers = lockerService.getLockersByOwner(username);
-//        return ResponseEntity.ok(lockers);
-//    }
+     //List lockers for the logged-in user
+     @GetMapping("/list")
+     public ResponseEntity<List<Locker>> listLockers(@RequestParam Long cardId) {
+         List<Locker> lockers = lockerService.getLockersByCardId(cardId);
+         return ResponseEntity.ok(lockers);
+     }
+
+
 
     // Access a locker (validate locker credentials)
     @GetMapping("/access")
