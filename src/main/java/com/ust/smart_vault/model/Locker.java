@@ -14,9 +14,18 @@ public class Locker {
     @ElementCollection
     private List<String> contents;
 
+
     @ManyToOne
     @JoinColumn(name = "card_id", nullable = false)
     private Card owner;
+
+    public List<String> getContents() {
+        return contents;
+    }
+
+    public void setContents(List<String> contents) {
+        this.contents = contents;
+    }
 
     public long getId() {
         return id;
