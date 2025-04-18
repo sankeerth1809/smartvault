@@ -24,6 +24,7 @@ public class SecurityConfig {
 
     private final CardUserDetailsService cardUserDetailsService;
     private final JwtAuthenticationFilter authFilter;
+
     public SecurityConfig(CardUserDetailsService cardUserDetailsService, JwtAuthenticationFilter authFilter) {
         this.cardUserDetailsService = cardUserDetailsService;
         this.authFilter = authFilter;
